@@ -1,6 +1,7 @@
 require 'forwardable'
 require 'rf_logger/version'
 require 'rf_logger/configuration'
+require 'rf_logger/levels'
 
 require 'rf_logger/notifications/error_notification'
 require 'rf_logger/notifications/error_notification_environment_constraints'

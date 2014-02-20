@@ -3,7 +3,7 @@ describe RfLogger::SimpleLogger do
     RfLogger::SimpleLogger.clear!
   end
 
-  [:info, :debug, :fatal, :warn, :error].each do |level|
+  RfLogger::LEVELS.each do |level|
     describe ".#{level}" do
       it "adds given object to the log with '#{level}' level" do
         described_class.should_receive(:add).

@@ -13,7 +13,7 @@ module RfLogger
         @entries = []
       end
 
-      [:debug, :info, :warn, :error, :fatal].each do |level|
+      RfLogger::LEVELS.each do |level|
         define_method level.to_sym do |entry|
           add level, entry
         end
