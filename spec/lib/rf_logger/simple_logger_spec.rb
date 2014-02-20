@@ -18,8 +18,8 @@ describe RfLogger::SimpleLogger do
       described_class.add(:info, :super_serious_occurrence)
       described_class.add(:debug, :weird_thing)
       described_class.entries.should == [
-        { :level => :info, :entry => :super_serious_occurrence },
-        { :level => :debug, :entry => :weird_thing }
+        { :level => 1, :level_name => :info, :entry => :super_serious_occurrence },
+        { :level => 0, :level_name => :debug, :entry => :weird_thing }
       ]
     end
   end
@@ -31,10 +31,10 @@ describe RfLogger::SimpleLogger do
       described_class.info 'third thing'
       described_class.fatal 'final thing'
       described_class.entries.should == [
-        { :level => :info, :entry => 'thing' },
-        { :level => :debug, :entry => 'other thing' },
-        { :level => :info, :entry => 'third thing' },
-        { :level => :fatal, :entry => 'final thing' }
+        { :level => 1, :level_name => :info, :entry => 'thing' },
+        { :level => 0, :level_name => :debug, :entry => 'other thing' },
+        { :level => 1, :level_name => :info, :entry => 'third thing' },
+        { :level => 4, :level_name => :fatal, :entry => 'final thing' }
       ]
     end
   end

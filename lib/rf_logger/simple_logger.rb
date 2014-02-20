@@ -6,7 +6,7 @@ module RfLogger
       end
 
       def add(level, entry)
-        entries << { :level => level, :entry => entry }
+        entries << { :level => RfLogger::LEVELS.index(level), :entry => entry, :level_name => level }
       end
 
       def clear!
