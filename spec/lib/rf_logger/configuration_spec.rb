@@ -91,7 +91,8 @@ describe RfLogger::Configuration do
       RfLogger.configuration.stub(:environment => 'test')
       configuration.set_notifier_list { |n| n.add_notifier SomeNotifier }
       configuration.clear!
-      configuration.notifiers.should == []
+      configuration.notifiers.keys.should =~ RfLogger::LEVELS
+      configuration.notifiers.values.uniq.should == [[]]
     end
   end
 
@@ -108,16 +109,15 @@ describe RfLogger::Configuration do
     it 'calls add_notifier on ErrorNotification and adds the notifier to config list' do
       RfLogger.configuration.stub(:environment => 'test')
 
-      ErrorNotification.should_receive(:add_notifier).with(SomeNotifier, :only => ['test']).and_call_original
-      ErrorNotification.should_receive(:add_notifier).with(SomeOtherNotifier, :except => ['test']).and_call_original
-      ErrorNotification.should_receive(:add_notifier).with(AThirdNotifier).and_call_original
       configuration.set_notifier_list do |n|
-        n.add_notifier SomeNotifier, :only => ['test']
-        n.add_notifier SomeOtherNotifier, :except => ['test']
-        n.add_notifier AThirdNotifier
+        n.add_notifier SomeNotifier, :only => ['test'], :levels => [:fatal]
+        n.add_notifier SomeOtherNotifier, :except => ['test'], :levels => [:fatal]
+        n.add_notifier AThirdNotifier, :levels => [:fatal]
       end
 
-      configuration.notifiers.should == [SomeNotifier, AThirdNotifier]
+      configuration.notifiers.delete(:fatal).should =~ [SomeNotifier, AThirdNotifier]
+      # all other levels shouldn't have notifiers
+      configuration.notifiers.values.uniq.should == [[]]
     end
   end
 end

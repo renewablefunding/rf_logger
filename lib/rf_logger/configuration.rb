@@ -7,9 +7,9 @@ module RfLogger
   # @example Standard settings
   #   RfLogger.configure do |c|
   #     c.notification_subject = "Oh no!"
-  #     c.notifications do |n|
-  #       c.add_error_notifier Notification::DefinedElsewhere, :except => ['test', 'development']
-  #       c.add_fatal_error_notifier Notification::OhNo, :only => ['production']
+  #     c.set_notifier_list do |n|
+  #       c.add_notifier Notification::DefinedElsewhere, :levels => [:error], :except => ['test', 'development']
+  #       c.add_notifier Notification::OhNo, :levels => [:fatal, :error], :only => ['production']
   #       c.add_notifer Notifcation:VeryVerbose
   #     end
   #     # ...
