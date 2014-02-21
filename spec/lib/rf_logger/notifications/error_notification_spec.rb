@@ -60,7 +60,7 @@ describe RfLogger::ErrorNotification do
     it 'calls error_notification on all configured notifiers' do
       log = double(:log, :level => :warn)
       described_class.notifiers[:warn].each do |n|
-        n.should_receive(:send_error_notification).with(log)
+        n.should_receive(:send_notification).with(log)
       end
       described_class.dispatch_error(log)
     end

@@ -25,7 +25,7 @@ module RfLogger
 
       def dispatch_error(log_info)
         notifiers[log_info.level.to_sym].each do |notifier|
-          notifier.send_error_notification log_info
+          notifier.send_notification log_info
         end
       end
 
