@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ErrorNotification do
+describe RfLogger::ErrorNotification do
   before :each do
     RfLogger.configuration.environment = 'test'
   end
@@ -50,13 +50,15 @@ describe ErrorNotification do
   end
 
   describe '.dispatch_error' do
-    it 'calls error_notification on all configured notifiers' do
+    before :each do
       described_class.configure do |c|
         c.add_notifier 'gravy_pie'
         c.add_notifier 'assiduous_hedgehog'
       end
+    end
 
-      log = double(:log, :level => 3)
+    it 'calls error_notification on all configured notifiers' do
+      log = double(:log, :level => :warn)
       described_class.notifiers[:warn].each do |n|
         n.should_receive(:send_error_notification).with(log)
       end

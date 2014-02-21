@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ErrorNotification::EnvironmentConstraints do
+describe RfLogger::ErrorNotification::EnvironmentConstraints do
   describe '#included?' do
     it 'returns true if no constraints for :only are given' do
       described_class.new('alpha', {}).included?.should be_true
