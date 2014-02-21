@@ -5,7 +5,7 @@ require 'rf_logger/version'
 
 Gem::Specification.new do |s|
   s.name        = 'rf_logger'
-  s.version     = '0.0.1'
+  s.version     = '0.0.2'
   s.date        = '2014-02-20'
   s.summary     = "A logger that adheres to Renewable Funding logging conventions"
   s.description = "A logger that allows specification of severity, applicable entity/records, metadata, and optional notifications"

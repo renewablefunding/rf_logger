@@ -10,10 +10,6 @@ require 'rf_logger/notifications/error_notification_environment_constraints'
 require 'rf_logger/simple_logger'
 require 'rf_logger/log_for_notification'
 
-if defined?(Sequel)
-  require 'json'
-  require 'rf_logger/sequel_logger'
-end
 
 module RfLogger
   class UndefinedSetting < StandardError; end

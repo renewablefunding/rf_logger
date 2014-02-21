@@ -5,9 +5,6 @@ SimpleCov.start
 # in spec/support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
-require 'sequel'
-DB = Sequel.mock
-
 require './lib/rf_logger'
 
 RSpec.configure do |config|

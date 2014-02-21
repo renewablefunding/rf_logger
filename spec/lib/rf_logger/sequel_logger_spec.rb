@@ -1,3 +1,7 @@
+require 'sequel'
+DB = Sequel.mock
+require File.expand_path( File.dirname( __FILE__ ) + '/../../../lib/rf_logger/sequel_logger' )
+
 describe RfLogger::SequelLogger do
   before :each do
     Time.stub(:now => 'NOW')

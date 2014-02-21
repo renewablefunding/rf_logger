@@ -1,8 +1,14 @@
+require 'json'
 module RfLogger
   class SequelLogger < Sequel::Model
     class << self
+      def inherited(subclass)
+        subclass.set_dataset underscore(demodulize(subclass.name.pluralize)).to_sym
+        super
+      end
+
       RfLogger::LEVELS.each do |level|
-        define_method level.to_sym do |entry|
+          define_method level.to_sym do |entry|
           log = add level, entry
 
           notification_log = LogForNotification.new(entry.merge(:level => level))
