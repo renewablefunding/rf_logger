@@ -10,7 +10,7 @@ module RfLogger
 
     def subject
       interpolated_configured_subject ||
-      "#{@level.upcase}! (#{@actor}/#{@action}"
+      "#{@level.upcase}! (#{@actor}/#{@action})"
     end
 
     def details
