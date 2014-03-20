@@ -81,5 +81,17 @@ describe RfLogger::SequelLogger do
 
       described_class.add(:info, { :action => 'palpitate' })
     end
+
+    it 'returns a hash for metadata even though it is stored as JSON' do
+      subject.metadata = {'foo' => 'bar'}
+      expect(subject.metadata).to eq({'foo' => 'bar'})
+    end
+  end
+
+  describe 'display_level' do
+    it 'returns a human-readable level instead of an integer' do
+      subject.level = 1
+      expect(subject.display_level).to eq(:info)
+    end
   end
 end

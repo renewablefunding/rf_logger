@@ -33,6 +33,12 @@ describe RfLogger do
         expect(c).to equal(described_class.configuration)
       end
     end
+
+    it 'requires a block and does not reset without one' do
+      existing_configuration = described_class.configuration { |c| c.environment = 'boo' }
+      expect { described_class.configure! }.to raise_error(ArgumentError)
+      expect(described_class.configuration).to eq(existing_configuration)
+    end
   end
 
   describe '.clear_configuration!' do
