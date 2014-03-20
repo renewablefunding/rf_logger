@@ -24,5 +24,24 @@ module RfLogger
     def configuration
       @configuration ||= RfLogger::Configuration.new
     end
+
+    def configure(&block)
+      unless block
+        raise ArgumentError.new("You tried to .configure without a block!")
+      end
+      yield configuration
+    end
+
+    def clear_configuration!
+      @configuration = nil
+    end
+
+    def configure!(&block)
+      unless block
+        raise ArgumentError.new('You tried to .configure without a block!')
+      end
+      clear_configuration!
+      yield configuration
+    end
   end
 end
