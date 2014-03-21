@@ -8,7 +8,7 @@ module RfLogger
       end
 
       def notifiers
-        @@notifiers ||= Hash[RfLogger::LEVELS.map { |level| [level, []] }]
+        @notifiers ||= Hash[RfLogger::LEVELS.map { |level| [level, []] }]
       end
 
       def add_notifier notifier, constraints={}
@@ -30,7 +30,7 @@ module RfLogger
       end
 
       def reset!
-        @@notifiers = nil; notifiers
+        @notifiers = nil; notifiers
       end
     end
   end
