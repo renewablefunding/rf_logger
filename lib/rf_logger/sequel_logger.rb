@@ -1,10 +1,10 @@
 require 'json'
 module RfLogger
-  class SequelLogger < Sequel::Model
+  class SequelLogger < Sequel::Model(DB.fetch('select 1'))
     class << self
       def inherited(subclass)
-        subclass.set_dataset underscore(demodulize(subclass.name.pluralize)).to_sym
         super
+        subclass.set_dataset underscore(demodulize(subclass.name.pluralize)).to_sym
       end
 
       RfLogger::LEVELS.each do |level|
