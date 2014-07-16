@@ -1,12 +1,12 @@
 require 'sequel'
-DB = Sequel.mock
+Sequel::Model.db = Sequel.mock
 require File.expand_path( File.dirname( __FILE__ ) + '/../../../lib/rf_logger/sequel_logger' )
 
 describe RfLogger::SequelLogger do
   before :each do
     Time.stub(:now => 'NOW')
-    described_class.dataset = 
-      DB[:logs].columns(:actor, :action, :target_type, :target_id,
+    described_class.dataset =
+      Sequel::Model.db[:logs].columns(:actor, :action, :target_type, :target_id,
                :metadata, :created_at, :updated_at, :level)
   end
 

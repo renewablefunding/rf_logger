@@ -1,6 +1,6 @@
 require 'json'
 module RfLogger
-  class SequelLogger < Sequel::Model(DB.fetch('select 1'))
+  class SequelLogger < Sequel::Model(Sequel::Model.db.fetch('select 1'))
     class << self
       def inherited(subclass)
         super
