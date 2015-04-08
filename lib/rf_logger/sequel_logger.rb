@@ -8,7 +8,7 @@ module RfLogger
       end
 
       RfLogger::LEVELS.each do |level|
-          define_method level.to_sym do |entry|
+        define_method level.to_sym do |entry|
           log = add level, entry
 
           notification_log = LogForNotification.new(entry.merge(:level => level))
@@ -27,11 +27,13 @@ module RfLogger
     end
 
     def metadata
+      return nil if self[:metadata].nil?
       JSON.parse(self[:metadata])
     end
 
     def metadata=(metadata_hash)
-      self[:metadata] = metadata_hash.to_json
+      metadata_as_json = metadata_hash.nil? ? nil : metadata_hash.to_json
+      self[:metadata] = metadata_as_json
     end
 
     def display_level

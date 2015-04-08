@@ -81,10 +81,17 @@ describe RfLogger::SequelLogger do
 
       described_class.add(:info, { :action => 'palpitate' })
     end
+  end
 
+  describe "#metadata" do
     it 'returns a hash for metadata even though it is stored as JSON' do
       subject.metadata = {'foo' => 'bar'}
       expect(subject.metadata).to eq({'foo' => 'bar'})
+    end
+
+    it 'returns nil if column is null' do
+      subject.metadata = nil
+      expect(subject.metadata).to be_nil
     end
   end
 
