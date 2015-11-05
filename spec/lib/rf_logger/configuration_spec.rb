@@ -19,7 +19,7 @@ describe RfLogger::Configuration do
 
     it 'returns environment set by user' do
       configuration.environment = 'test'
-      configuration.environment.should == 'test'
+      expect(configuration.environment).to eq('test')
     end
 
     it 'uses Rails.env if Rails is defined' do
@@ -29,7 +29,7 @@ describe RfLogger::Configuration do
         end
       end
 
-      configuration.environment.should == 'monkey'
+      expect(configuration.environment).to eq('monkey')
     end
 
     it 'uses Padrino.environment if defined' do
@@ -39,7 +39,7 @@ describe RfLogger::Configuration do
         end
       end
 
-      configuration.environment.should == 'padrino'
+      expect(configuration.environment).to eq('padrino')
     end
 
     it 'uses Sinatra::Application.environment if defined' do
@@ -51,7 +51,7 @@ describe RfLogger::Configuration do
         end
       end
 
-      configuration.environment.should == 'sinatra'
+      expect(configuration.environment).to eq('sinatra')
     end
 
     it 'uses ENV["RORY_STAGE"] if Rory is defined' do
@@ -59,7 +59,7 @@ describe RfLogger::Configuration do
       end
       ENV['RORY_STAGE'] = 'rory'
 
-      configuration.environment.should == 'rory'
+      expect(configuration.environment).to eq('rory')
       ENV['RORY_STAGE'] = nil
     end
 
@@ -84,22 +84,22 @@ describe RfLogger::Configuration do
     it 'resets notification subject' do
       configuration.notification_subject = 'foo'
       configuration.clear!
-      configuration.notification_subject.should be_nil
+      expect(configuration.notification_subject).to be_nil
     end
 
     it 'resets environmental error notifier settings' do
-      RfLogger.configuration.stub(:environment => 'test')
+      allow(RfLogger.configuration).to receive_messages(:environment => 'test')
       configuration.set_notifier_list { |n| n.add_notifier SomeNotifier }
       configuration.clear!
-      configuration.notifiers.keys.should =~ RfLogger::LEVELS
-      configuration.notifiers.values.uniq.should == [[]]
+      expect(configuration.notifiers.keys).to match_array(RfLogger::LEVELS)
+      expect(configuration.notifiers.values.uniq).to eq([[]])
     end
   end
 
   describe 'notification_subject' do
     it 'sets the value' do
       configuration.notification_subject = 'Foo!'
-      configuration.notification_subject.should == 'Foo!'
+      expect(configuration.notification_subject).to eq('Foo!')
     end
   end
 
@@ -107,7 +107,7 @@ describe RfLogger::Configuration do
     class SomeOtherNotifier; end
     class AThirdNotifier; end
     it 'calls add_notifier on ErrorNotification and adds the notifier to config list' do
-      RfLogger.configuration.stub(:environment => 'test')
+      allow(RfLogger.configuration).to receive_messages(:environment => 'test')
 
       configuration.set_notifier_list do |n|
         n.add_notifier SomeNotifier, :only => ['test'], :levels => [:fatal]
@@ -115,9 +115,9 @@ describe RfLogger::Configuration do
         n.add_notifier AThirdNotifier, :levels => [:fatal]
       end
 
-      configuration.notifiers.delete(:fatal).should =~ [SomeNotifier, AThirdNotifier]
+      expect(configuration.notifiers.delete(:fatal)).to match_array([SomeNotifier, AThirdNotifier])
       # all other levels shouldn't have notifiers
-      configuration.notifiers.values.uniq.should == [[]]
+      expect(configuration.notifiers.values.uniq).to eq([[]])
     end
   end
 end

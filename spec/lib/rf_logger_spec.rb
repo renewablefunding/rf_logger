@@ -16,8 +16,8 @@ describe RfLogger do
         c.environment = 'production'
       end
 
-      described_class.configuration.notification_subject.should == 'Foo'
-      described_class.configuration.environment.should == 'production'
+      expect(described_class.configuration.notification_subject).to eq('Foo')
+      expect(described_class.configuration.environment).to eq('production')
     end
 
     it 'requires a block' do
@@ -45,25 +45,25 @@ describe RfLogger do
     it 'resets configuration' do
       old_config = described_class.configuration
       described_class.clear_configuration!
-      described_class.configuration.should_not == old_config
+      expect(described_class.configuration).not_to eq(old_config)
     end
   end
 
   describe '.environment' do
     it 'can set directly' do
       described_class.environment = 'foo'
-      described_class.configuration.environment.should == 'foo'
+      expect(described_class.configuration.environment).to eq('foo')
     end
   end
 
   describe '.configuration' do
     it 'creates an instance of RfLogger::Configuration' do
-      described_class.configuration.should be_an_instance_of(RfLogger::Configuration)
+      expect(described_class.configuration).to be_an_instance_of(RfLogger::Configuration)
     end
 
     it 'returns the same instance when called multiple times' do
       configuration = described_class.configuration
-      described_class.configuration.should == configuration
+      expect(described_class.configuration).to eq(configuration)
     end
   end
 end

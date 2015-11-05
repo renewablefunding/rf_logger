@@ -6,7 +6,7 @@ describe RfLogger::SimpleLogger do
   RfLogger::LEVELS.each do |level|
     describe ".#{level}" do
       it "adds given object to the log with '#{level}' level" do
-        described_class.should_receive(:add).
+        expect(described_class).to receive(:add).
           with(level, :something => :happened)
         described_class.send(level.to_sym, :something => :happened)
       end
@@ -17,10 +17,10 @@ describe RfLogger::SimpleLogger do
     it 'adds given object to the log at given level' do
       described_class.add(:info, :super_serious_occurrence)
       described_class.add(:debug, :weird_thing)
-      described_class.entries.should == [
+      expect(described_class.entries).to eq([
         { :level => 1, :level_name => :info, :entry => :super_serious_occurrence },
         { :level => 0, :level_name => :debug, :entry => :weird_thing }
-      ]
+      ])
     end
   end
 
@@ -30,22 +30,22 @@ describe RfLogger::SimpleLogger do
       described_class.debug 'other thing'
       described_class.info 'third thing'
       described_class.fatal 'final thing'
-      described_class.entries.should == [
+      expect(described_class.entries).to eq([
         { :level => 1, :level_name => :info, :entry => 'thing' },
         { :level => 0, :level_name => :debug, :entry => 'other thing' },
         { :level => 1, :level_name => :info, :entry => 'third thing' },
         { :level => 4, :level_name => :fatal, :entry => 'final thing' }
-      ]
+      ])
     end
   end
 
   describe '.clear!' do
     it 'deletes all entries' do
-      described_class.entries.should be_empty
+      expect(described_class.entries).to be_empty
       described_class.info 'thing'
-      described_class.entries.should_not be_empty
+      expect(described_class.entries).not_to be_empty
       described_class.clear!
-      described_class.entries.should be_empty
+      expect(described_class.entries).to be_empty
     end
   end
 end
