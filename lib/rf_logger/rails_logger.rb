@@ -3,7 +3,10 @@ require 'active_record'
 module RfLogger
 
   class RailsLogger < ActiveRecord::Base
+    self.table_name = "logs"
+
     class << self
+
       RfLogger::LEVELS.each do |level|
         define_method level.to_sym do |entry|
           add level, entry

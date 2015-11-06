@@ -5,6 +5,7 @@ describe RfLogger::RailsLogger do
 
   before do
     allow(described_class).to receive(:create)
+    allow(described_class).to receive(:table_name)
   end
 
   RfLogger::LEVELS.each do |level|
