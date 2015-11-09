@@ -17,7 +17,8 @@ module RfLogger
 
       def excluded?
         except = @constraints[:except]
-        except && except.include?(@environment)
+        return false if except.nil?
+        except.include?(@environment)
       end
     end
   end

@@ -4,7 +4,7 @@ require File.expand_path( File.dirname( __FILE__ ) + '/../../../lib/rf_logger/se
 
 describe RfLogger::SequelLogger do
   before :each do
-    Time.stub(:now => 'NOW')
+    allow(Time).to receive_messages(:now => 'NOW')
     described_class.dataset =
       Sequel::Model.db[:logs].columns(:actor, :action, :target_type, :target_id,
                :metadata, :created_at, :updated_at, :level)
@@ -13,14 +13,14 @@ describe RfLogger::SequelLogger do
   RfLogger::LEVELS.each do |level|
     describe ".#{level}" do
       it "logs information in the database with #{level.upcase} level" do
-        described_class.should_receive(:add).
+        expect(described_class).to receive(:add).
           with(level, :something => :happened)
         described_class.send(level.to_sym, :something => :happened)
       end
 
       it 'dispatches error notifications' do
-        described_class.stub(:add)
-        RfLogger::ErrorNotification.should_receive(:dispatch_error)
+        allow(described_class).to receive(:add)
+        expect(RfLogger::ErrorNotification).to receive(:dispatch_error)
         described_class.send(level.to_sym, :something => :happened)
       end
     end
@@ -28,7 +28,7 @@ describe RfLogger::SequelLogger do
 
   describe '.add' do
     it 'adds given object to the log at given level' do
-      RfLogger::SequelLogger.should_receive(:create).with(
+      expect(RfLogger::SequelLogger).to receive(:create).with(
         :actor => 'cat herder',
         :action => 'herd some cats',
         :target_type => 'Cat',
@@ -60,7 +60,7 @@ describe RfLogger::SequelLogger do
     end
 
     it 'sets actor to blank string if not provided' do
-      described_class.should_receive(:create).with(
+      expect(described_class).to receive(:create).with(
         :actor => '',
         :action => 'palpitate',
         :metadata => {},
@@ -71,7 +71,7 @@ describe RfLogger::SequelLogger do
     end
 
     it 'sets metadata to empty hash if not provided' do
-      described_class.should_receive(:create).with(
+      expect(described_class).to receive(:create).with(
         :actor => '',
         :action => 'palpitate',
         :metadata => {},

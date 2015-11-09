@@ -17,9 +17,9 @@ describe RfLogger::ErrorNotification do
         c.add_notifier 'swiftly clean', :levels => [:fatal]
       end
 
-      described_class.notifiers.delete(:error).should =~ ['perfectly refined']
-      described_class.notifiers.delete(:fatal).should =~ ['perfectly refined', 'swiftly clean']
-      described_class.notifiers.values.uniq.should == [[]]
+      expect(described_class.notifiers.delete(:error)).to match_array(['perfectly refined'])
+      expect(described_class.notifiers.delete(:fatal)).to match_array(['perfectly refined', 'swiftly clean'])
+      expect(described_class.notifiers.values.uniq).to eq([[]])
     end
 
     it 'allows multiple types of notification' do
@@ -27,10 +27,10 @@ describe RfLogger::ErrorNotification do
         c.add_notifier 'gravy_pie'
         c.add_notifier 'assiduous_hedgehog'
       end
-      described_class.notifiers.keys.should == RfLogger::LEVELS
+      expect(described_class.notifiers.keys).to eq(RfLogger::LEVELS)
       described_class.notifiers.values.uniq.tap do |unique_notifiers|
-        unique_notifiers.count.should == 1
-        unique_notifiers[0].should =~ ['assiduous_hedgehog', 'gravy_pie']
+        expect(unique_notifiers.count).to eq(1)
+        expect(unique_notifiers[0]).to match_array(['assiduous_hedgehog', 'gravy_pie'])
       end
     end
 
@@ -43,8 +43,8 @@ describe RfLogger::ErrorNotification do
       end
 
       described_class.notifiers.values.uniq.tap do |unique_notifiers|
-        unique_notifiers.count.should == 1
-        unique_notifiers[0].should == ['terribly sweet']
+        expect(unique_notifiers.count).to eq(1)
+        expect(unique_notifiers[0]).to eq(['terribly sweet'])
       end
     end
   end
@@ -60,7 +60,7 @@ describe RfLogger::ErrorNotification do
     it 'calls error_notification on all configured notifiers' do
       log = double(:log, :level => :warn)
       described_class.notifiers[:warn].each do |n|
-        n.should_receive(:send_notification).with(log)
+        expect(n).to receive(:send_notification).with(log)
       end
       described_class.dispatch_error(log)
     end
