@@ -13,7 +13,71 @@ The API provides helper methods for each severity (i.e. `Logger.debug`).  In add
 - target_id (This is used in conjunction with target_type, as the unique identifier for the relevant entity)
 - metadata (Additional information such as error details and backtraces or other messages, stored as a hash)
 
-This gem includes RfLogger::SimpleLogger and RfLogger::Sequel logger as two options that adhere to this API.  The fields above should be passed into helper methods as a hash.
+This gem includes RfLogger::SimpleLogger, RfLogger::SequelLooger and RfLogger::RailsLogger loggers as options that adhere to this API.  The fields above should be passed into helper methods as a hash.
+
+##Integration##
+Integrating RfLogger into your project requires the following steps:
+* Include the rf_logger code in your project
+* Create a migration 
+* Add a model
+
+#### Including rf_logger ####
+Currently, RfLogger is included from the Github repo. Place the following in your Gemfile:
+
+```gem 'rf_logger', :github => 'renewablefunding/rf_logger'```
+
+Also make sure you include rf_logger and the logger you're going to be using:
+
+```
+require "rf_logger"
+require "rf_logger/rails_logger"    # If using RailsLogger
+# require "rf_logger/sequel_logger" # If using SequelLogger
+```
+
+#### Migration ####
+Assuming your logger will persist to a database, you'll need to create a table. While the api should make it pretty easy to determine which fields you'll need, here are the guts of what you'd need for both the SequelLogger and RailsLogger:
+######Sequel######
+```
+create_table :logs do
+    primary_key :id
+    column :actor, :text, :null => false
+    column :action, :text, :null => false
+    column :target_type, :text
+    column :target_id, :text
+    column :metadata, :text
+    column :created_at, 'timestamp with time zone', :null => false
+    Integer :level, :null => false, :default => 0
+end
+```
+
+######Rails######
+```
+create_table :logs do |table|
+    table.integer :level, null: false, default: 0
+    table.string :actor
+    table.string :action
+    table.string :target_type
+    table.string :target_id
+    table.string :metadata
+    table.timestamps null: false
+end
+```
+
+#### Model ####
+Again, assuming you'll be using the SequelLogger or RailsLogger (or some other logger that persists to a datasource), you'll want to create a Model that wraps your logger. This is as simple as creating a class that inherits from your logger (though you can make it more complex as your project needs dictate):
+
+######Sequel######
+```
+class Log < RfLogger::SequelLogger
+end
+```
+
+######Rails######
+```
+class Log < RfLogger::RailsLogger
+end
+```
+
 
 ##Configuration##
 Configuration mostly sets up additional notifications beyond the actual logging.
@@ -32,7 +96,7 @@ RfLogger.configure do |c|
 end
 ```
 
-As you seen above, you can specify different notifications for different levels or environments whend you log an event.
+As you see above, you can specify different notifications for different levels or environments when you log an event.
 
 ##Notification##
 While you have to implement notifiers yourself, the API is fairly simple.  The class must respond to .send_notification.  The argument passed in is an object that includes a #subject (which can be defined in the configuration (see above), and #details, which is the metadata in YAML format.  Future versions of this may allow for other transformations of the log data.
