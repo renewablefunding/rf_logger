@@ -3,6 +3,8 @@ Sequel::Model.db = Sequel.mock
 require File.expand_path( File.dirname( __FILE__ ) + '/../../../lib/rf_logger/sequel_logger' )
 
 describe RfLogger::SequelLogger do
+  include_examples "RfLogger::RequestId", subject: described_class
+
   before :each do
     allow(Time).to receive_messages(:now => 'NOW')
     described_class.dataset =
@@ -29,6 +31,7 @@ describe RfLogger::SequelLogger do
   describe '.add' do
     it 'adds given object to the log at given level' do
       expect(RfLogger::SequelLogger).to receive(:create).with(
+        :request_id => "uninitialized",
         :actor => 'cat herder',
         :action => 'herd some cats',
         :target_type => 'Cat',
@@ -61,6 +64,7 @@ describe RfLogger::SequelLogger do
 
     it 'sets actor to blank string if not provided' do
       expect(described_class).to receive(:create).with(
+        :request_id => 'uninitialized',
         :actor => '',
         :action => 'palpitate',
         :metadata => {},
@@ -72,6 +76,7 @@ describe RfLogger::SequelLogger do
 
     it 'sets metadata to empty hash if not provided' do
       expect(described_class).to receive(:create).with(
+        :request_id => 'uninitialized',
         :actor => '',
         :action => 'palpitate',
         :metadata => {},

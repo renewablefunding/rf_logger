@@ -1,6 +1,10 @@
 require 'json'
+require "rf_logger/request_id"
+
 module RfLogger
   class SequelLogger < Sequel::Model(Sequel::Model.db.fetch('select 1'))
+    extend RequestId
+
     class << self
       def inherited(subclass)
         super
@@ -18,6 +22,7 @@ module RfLogger
       end
 
       def add(level, entry)
+        entry[:request_id] = request_id
         entry[:level] = RfLogger::LEVELS.index(level.to_sym)
         entry[:actor] = entry[:actor] || ''
         entry[:metadata] = entry[:metadata] || {}

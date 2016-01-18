@@ -1,10 +1,11 @@
 require 'active_record'
+require "rf_logger/request_id"
 
 module RfLogger
 
   class RailsLogger < ActiveRecord::Base
     self.table_name = "logs"
-
+    extend RequestId
     class << self
 
       RfLogger::LEVELS.each do |level|
@@ -15,6 +16,7 @@ module RfLogger
 
       def add(level, entry)
         create(
+          :request_id => request_id,
           :level => RfLogger::LEVELS.index(level.to_sym),
           :action => entry[:action],
           :actor => entry[:actor],
