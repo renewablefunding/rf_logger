@@ -1,24 +1,46 @@
 module RfLogger
   class RequestMiddleware
-    def initialize(app, custom_env_key: nil)
-      @app            = app
-      @custom_env_key = custom_env_key
+    # @param [Hash] options
+    # @option opts [Hash{:label => :request_method}] :tagged The subject
+    # @option opts [Class] :rack_request_class
+    def initialize(app, options={})
+      @app                = app
+      @tagged             = options.fetch(:tagged, { request_id: :uuid })
+      @rack_request_class = options.fetch(:rack_request_class){request_class}
     end
 
     def call(env)
       @env = env
-      Thread.current[:rf_logger_request_id] = custom_env_key || request_id
+      set_tagged_thread_var
       @app.call(@env)
+    end
+
+    def tagged
+      @tagged.each_with_object({}) do |(key, value), hash|
+        hash[key] = request_object.send(value) if request_object.respond_to? value
+      end
     end
 
     private
 
-    def custom_env_key
-      @env[@custom_env_key] if @custom_env_key
+    def set_tagged_thread_var
+      Thread.current[:inheritable_attributes] = {} unless Thread.current[:inheritable_attributes]
+      Thread.current[:inheritable_attributes] = Thread.current[:inheritable_attributes].merge(:rf_logger_request_tags => tagged)
     end
 
-    def request_id
-      @env.uuid if @env.respond_to? :uuid
+    def request_object
+      @request_object ||= @rack_request_class.new(@env)
+    end
+
+    def request_class
+      case
+      when defined? ActionDispatch::Request
+        ActionDispatch::Request
+      when defined? Rory::Request
+        Rory::Request
+      else
+        raise ArgumentError, "Unknown framework context - :rack_request_class key needed."
+      end
     end
   end
 end

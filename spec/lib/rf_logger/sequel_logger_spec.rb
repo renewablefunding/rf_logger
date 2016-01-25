@@ -10,6 +10,7 @@ describe RfLogger::SequelLogger do
     described_class.dataset =
       Sequel::Model.db[:logs].columns(:actor, :action, :target_type, :target_id,
                :metadata, :created_at, :updated_at, :level)
+    allow(described_class).to receive(:rf_logger_request_tags){{request_id: "909090"}}
   end
 
   RfLogger::LEVELS.each do |level|
@@ -31,7 +32,7 @@ describe RfLogger::SequelLogger do
   describe '.add' do
     it 'adds given object to the log at given level' do
       expect(RfLogger::SequelLogger).to receive(:create).with(
-        :request_id => "uninitialized",
+        :rf_logger_request_tags=>{:request_id=>"909090"},
         :actor => 'cat herder',
         :action => 'herd some cats',
         :target_type => 'Cat',
@@ -64,7 +65,7 @@ describe RfLogger::SequelLogger do
 
     it 'sets actor to blank string if not provided' do
       expect(described_class).to receive(:create).with(
-        :request_id => 'uninitialized',
+        :rf_logger_request_tags=>{:request_id=>"909090"},
         :actor => '',
         :action => 'palpitate',
         :metadata => {},
@@ -76,7 +77,7 @@ describe RfLogger::SequelLogger do
 
     it 'sets metadata to empty hash if not provided' do
       expect(described_class).to receive(:create).with(
-        :request_id => 'uninitialized',
+        :rf_logger_request_tags=>{:request_id=>"909090"},
         :actor => '',
         :action => 'palpitate',
         :metadata => {},
