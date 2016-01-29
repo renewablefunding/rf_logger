@@ -24,8 +24,7 @@ module RfLogger
     private
 
     def set_tagged_thread_var
-      Thread.current[:inheritable_attributes] = {} unless Thread.current[:inheritable_attributes]
-      Thread.current[:inheritable_attributes] = Thread.current[:inheritable_attributes].merge(:rf_logger_request_tags => tagged)
+      (Thread.current[:inheritable_attributes] ||= {})[:rf_logger_request_tags] = tagged
     end
 
     def request_object
