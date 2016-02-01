@@ -64,6 +64,20 @@ describe RfLogger::SequelLogger do
       })
     end
 
+    context "when rf_logger_request_tags is empty" do
+      it "return a metadata with no request_tags key" do
+        allow(described_class).to receive(:rf_logger_request_tags){{}}
+
+        expect(RfLogger::SequelLogger).to receive(:create).with(
+          ({ :level      => 1,
+             :actor      => "",
+             :metadata   => { },
+             :created_at => "NOW" })
+        )
+        described_class.add(:info, {})
+      end
+    end
+
     it 'sets actor to blank string if not provided' do
       expect(described_class).to receive(:create).with(
         :actor => '',
