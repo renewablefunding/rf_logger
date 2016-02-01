@@ -10,6 +10,7 @@ describe RfLogger::SequelLogger do
     described_class.dataset =
       Sequel::Model.db[:logs].columns(:actor, :action, :target_type, :target_id,
                :metadata, :created_at, :updated_at, :level)
+    allow(described_class).to receive(:rf_logger_request_tags){{request_id: "909090"}}
   end
 
   RfLogger::LEVELS.each do |level|
