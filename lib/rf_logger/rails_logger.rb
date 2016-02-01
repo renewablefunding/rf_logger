@@ -15,15 +15,16 @@ module RfLogger
       end
 
       def add(level, entry)
-        create(
-          :rf_logger_request_tags => rf_logger_request_tags,
-          :level => RfLogger::LEVELS.index(level.to_sym),
-          :action => entry[:action],
-          :actor => entry[:actor],
-          :target_type => entry[:target_type],
-          :target_id => entry[:target_id],
-          :metadata => entry[:metadata]
-        )
+        attributes = {
+          :level                  => RfLogger::LEVELS.index(level.to_sym),
+          :action                 => entry[:action],
+          :actor                  => entry[:actor],
+          :metadata               => entry[:metadata] || {},
+          :target_type            => entry[:target_type],
+          :target_id              => entry[:target_id],
+        }
+        attributes[:metadata].merge!(request_tags: rf_logger_request_tags) unless rf_logger_request_tags.empty?
+        create(attributes)
       end
     end
   end

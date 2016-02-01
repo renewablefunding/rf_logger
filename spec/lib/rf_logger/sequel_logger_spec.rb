@@ -32,7 +32,6 @@ describe RfLogger::SequelLogger do
   describe '.add' do
     it 'adds given object to the log at given level' do
       expect(RfLogger::SequelLogger).to receive(:create).with(
-        :rf_logger_request_tags=>{:request_id=>"909090"},
         :actor => 'cat herder',
         :action => 'herd some cats',
         :target_type => 'Cat',
@@ -42,7 +41,8 @@ describe RfLogger::SequelLogger do
           :danger => {
             :level => 'really_high',
             :rodent => 'mouse',
-          }
+          },
+          :request_tags => { :request_id => "909090" }
         },
         :level => RfLogger::LEVELS.index(:info),
         :created_at => 'NOW',
@@ -58,17 +58,31 @@ describe RfLogger::SequelLogger do
           :danger => {
             :level => 'really_high',
             :rodent => 'mouse',
-          }
+          },
+          :request_tags => { :request_id => "909090" }
         }
       })
     end
 
+    context "when rf_logger_request_tags is empty" do
+      it "return a metadata with no request_tags key" do
+        allow(described_class).to receive(:rf_logger_request_tags){{}}
+
+        expect(RfLogger::SequelLogger).to receive(:create).with(
+          ({ :level      => 1,
+             :actor      => "",
+             :metadata   => { },
+             :created_at => "NOW" })
+        )
+        described_class.add(:info, {})
+      end
+    end
+
     it 'sets actor to blank string if not provided' do
       expect(described_class).to receive(:create).with(
-        :rf_logger_request_tags=>{:request_id=>"909090"},
         :actor => '',
         :action => 'palpitate',
-        :metadata => {},
+        :metadata => {:request_tags=>{:request_id=>"909090"}},
         :created_at => 'NOW',
         :level => RfLogger::LEVELS.index(:info))
 
@@ -77,10 +91,9 @@ describe RfLogger::SequelLogger do
 
     it 'sets metadata to empty hash if not provided' do
       expect(described_class).to receive(:create).with(
-        :rf_logger_request_tags=>{:request_id=>"909090"},
         :actor => '',
         :action => 'palpitate',
-        :metadata => {},
+        :metadata => {:request_tags=>{:request_id=>"909090"}},
         :created_at => 'NOW',
         :level => RfLogger::LEVELS.index(:info)
       )
