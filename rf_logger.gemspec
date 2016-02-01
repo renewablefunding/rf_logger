@@ -22,8 +22,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "bundler", "~> 1.3"
   s.add_development_dependency "rake"
   s.add_development_dependency 'rspec', "~> 3"
-  s.add_development_dependency 'watchr'
-  s.add_development_dependency 'pry-byebug'
   s.add_development_dependency 'simplecov'
   s.add_development_dependency 'sequel'
   s.add_development_dependency 'activerecord'
