@@ -1,10 +1,11 @@
 require 'active_record'
+require "rf_logger/request_tags"
 
 module RfLogger
 
   class RailsLogger < ActiveRecord::Base
     self.table_name = "logs"
-
+    extend RequestTags
     class << self
 
       RfLogger::LEVELS.each do |level|
@@ -15,6 +16,7 @@ module RfLogger
 
       def add(level, entry)
         create(
+          :rf_logger_request_tags => rf_logger_request_tags,
           :level => RfLogger::LEVELS.index(level.to_sym),
           :action => entry[:action],
           :actor => entry[:actor],
