@@ -22,10 +22,9 @@ module RfLogger
       end
 
       def add(level, entry)
-        entry[:rf_logger_request_tags] = rf_logger_request_tags
         entry[:level] = RfLogger::LEVELS.index(level.to_sym)
         entry[:actor] = entry[:actor] || ''
-        entry[:metadata] = entry[:metadata] || {}
+        entry[:metadata] = (entry[:metadata] || {}).merge(request_tags: rf_logger_request_tags)
         entry[:created_at] = Time.now
         create(entry)
       end
