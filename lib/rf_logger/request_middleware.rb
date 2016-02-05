@@ -1,3 +1,5 @@
+require "thread/inheritable_attributes"
+
 module RfLogger
   class RequestMiddleware
     # @param [Hash] options
@@ -22,7 +24,7 @@ module RfLogger
     private
 
     def set_tagged_thread_var
-      (Thread.current[:inheritable_attributes] ||= {})[:rf_logger_request_tags] = tagged
+      Thread.current.set_inheritable_attribute(:rf_logger_request_tags, tagged)
     end
   end
 end

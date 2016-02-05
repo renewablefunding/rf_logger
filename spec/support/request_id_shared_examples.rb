@@ -3,12 +3,12 @@ RSpec.shared_context "RfLogger::RequestId" do |subject:|
   before {allow(subject).to receive(:rf_logger_request_tags).and_call_original}
     context "When thread var inheritable_attributes is nil" do
       before { Thread.current[:inheritable_attributes] = nil }
-      it { expect(subject.rf_logger_request_tags).to eq({}) }
+      it { expect(subject.rf_logger_request_tags).to eq(nil) }
     end
 
     context "when thread var inheritable_attributes is empty hash" do
       before { Thread.current[:inheritable_attributes] = {} }
-      it { expect(subject.rf_logger_request_tags).to eq({}) }
+      it { expect(subject.rf_logger_request_tags).to eq(nil) }
     end
 
     context "when thread var inheritable_attributes has key rf_logger_request_tags" do
