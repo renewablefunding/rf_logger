@@ -12,7 +12,7 @@ describe RfLogger::RailsLogger do
     describe ".#{level}" do
       context "when rf_logger_request_tags is empty" do
         it "creates new Log object with level = #{level}" do
-          allow(described_class).to receive(:rf_logger_request_tags){{}}
+          allow(described_class).to receive(:rf_logger_request_tags){nil}
           described_class.send(level.to_sym, action: 'log me')
           expect(described_class).to have_received(:create).with(
             :level => RfLogger::LEVELS.index(level.to_sym),

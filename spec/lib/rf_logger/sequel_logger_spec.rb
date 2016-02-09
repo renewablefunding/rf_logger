@@ -66,7 +66,7 @@ describe RfLogger::SequelLogger do
 
     context "when rf_logger_request_tags is empty" do
       it "return a metadata with no request_tags key" do
-        allow(described_class).to receive(:rf_logger_request_tags){{}}
+        allow(described_class).to receive(:rf_logger_request_tags){nil}
 
         expect(RfLogger::SequelLogger).to receive(:create).with(
           ({ :level      => 1,

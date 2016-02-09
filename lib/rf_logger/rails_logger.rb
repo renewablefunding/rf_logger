@@ -23,7 +23,7 @@ module RfLogger
           :target_type            => entry[:target_type],
           :target_id              => entry[:target_id],
         }
-        attributes[:metadata].merge!(request_tags: rf_logger_request_tags) unless rf_logger_request_tags.empty?
+        attributes[:metadata].merge!(request_tags: rf_logger_request_tags) unless rf_logger_request_tags.nil?
         create(attributes)
       end
     end
