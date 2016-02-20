@@ -14,6 +14,7 @@ RSpec.describe RfLogger::Configuration do
     Object.send(:remove_const, :Rory) if defined?(Rory)
     Object.send(:remove_const, :Padrino) if defined?(Padrino)
     Object.send(:remove_const, :Sinatra) if defined?(Sinatra::Application)
+    configuration.clear!
   end
 
   describe "#environment" do
