@@ -1,4 +1,8 @@
-describe RfLogger::Configuration do
+require "rf_logger/notifications/error_notification"
+require "rf_logger/configuration"
+require "rf_logger/levels"
+
+RSpec.describe RfLogger::Configuration do
   class SomeNotifier; end
   let(:configuration) {described_class.new}
   before :each do

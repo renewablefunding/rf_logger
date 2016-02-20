@@ -1,4 +1,4 @@
-require "rf_logger/request_middleware"
+require "rf_logger/request/request_middleware"
 
 RSpec.describe RfLogger::RequestMiddleware do
   subject { RfLogger::RequestMiddleware.new(*init_arguments).call(env) }

@@ -1,9 +1,13 @@
 require 'sequel'
 Sequel::Model.db = Sequel.mock
-require File.expand_path( File.dirname( __FILE__ ) + '/../../../lib/rf_logger/sequel_logger' )
+require "rf_logger/sequel/logger"
 
-describe RfLogger::SequelLogger do
+describe RfLogger::Sequel::Logger do
   include_examples "RfLogger::RequestId", subject: described_class
+
+  it "keeps backwards compatibility" do
+    expect(described_class).to eq RfLogger::SequelLogger
+  end
 
   before :each do
     allow(Time).to receive_messages(:now => 'NOW')
@@ -31,7 +35,7 @@ describe RfLogger::SequelLogger do
 
   describe '.add' do
     it 'adds given object to the log at given level' do
-      expect(RfLogger::SequelLogger).to receive(:create).with(
+      expect(described_class).to receive(:create).with(
         :actor => 'cat herder',
         :action => 'herd some cats',
         :target_type => 'Cat',
@@ -68,7 +72,7 @@ describe RfLogger::SequelLogger do
       it "return a metadata with no request_tags key" do
         allow(described_class).to receive(:rf_logger_request_tags){nil}
 
-        expect(RfLogger::SequelLogger).to receive(:create).with(
+        expect(described_class).to receive(:create).with(
           ({ :level      => 1,
              :actor      => "",
              :metadata   => { },

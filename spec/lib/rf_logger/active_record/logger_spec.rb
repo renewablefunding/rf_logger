@@ -1,8 +1,13 @@
-require "rf_logger/rails_logger"
+require "rf_logger/active_record/logger"
 require "active_record"
 
-describe RfLogger::RailsLogger do
+describe RfLogger::ActiveRecord::Logger do
   include_examples "RfLogger::RequestId", subject: described_class
+
+  it "keeps backwards compatibility" do
+    expect(described_class).to eq RfLogger::RailsLogger
+  end
+
   RfLogger::LEVELS.each do |level|
     before do
       allow(described_class).to receive(:create)

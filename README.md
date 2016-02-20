@@ -12,8 +12,9 @@ The API provides helper methods for each severity (i.e. `Logger.debug`).  In add
 - target_type (We use this in cases where we want to tie a log record to a particular entity or object in the database, for example User)
 - target_id (This is used in conjunction with target_type, as the unique identifier for the relevant entity)
 - metadata (Additional information such as error details and backtraces or other messages, stored as a hash)
+    * Include in this Hash is the rf_logger_request_tags, which by default contains the request_id if available.
 
-This gem includes RfLogger::SimpleLogger, RfLogger::SequelLooger and RfLogger::RailsLogger loggers as options that adhere to this API.  The fields above should be passed into helper methods as a hash.
+This gem includes RfLogger::SimpleLogger, RfLogger::Sequel::Logger and RfLogger::ActiveRecord::Logger loggers as options that adhere to this API.  The fields above should be passed into helper methods as a hash.
 
 ##Integration##
 Integrating RfLogger into your project requires the following steps:
@@ -24,19 +25,51 @@ Integrating RfLogger into your project requires the following steps:
 #### Including rf_logger ####
 Currently, RfLogger is included from the Github repo. Place the following in your Gemfile:
 
-```gem 'rf_logger', :github => 'renewablefunding/rf_logger'```
+```gem 'rf_logger', :github => 'renewablefunding/rf_logger' , :tag => "0.3.0"```
 
 Also make sure you include rf_logger and the logger you're going to be using:
 
-```
-require "rf_logger"
-require "rf_logger/rails_logger"    # If using RailsLogger
-# require "rf_logger/sequel_logger" # If using SequelLogger
+
+#### Rails
+ 
+##### Requirements
+
+Support Rails `3.2` to `~> 5.0`
+
+##### Features
+
+Alters Rails.logger to append `request_id=89f25715-3e5d-4d85-9352-843a1aeec7d0`
+
+#### Rory Requirements
+
+Support Rory => `0.7`
+
+#### RfLogger::RequestHeaders
+
+*If in the context of a request*
+```ruby
+RfLogger::RequestHeaders.new(type: nil).to_hash
+    #=> {"X-Request-Id" => "89f25715-3e5d-4d85-9352-843a1aeec7d0"}
+
 ```
 
-#### Migration ####
+*It defaults to content type of JSON*
+```ruby
+RfLogger::RequestHeaders.new.to_hash
+    #=> {"Content-Type" => "application/json"}
+
+```
+
+*Any additional headers can be added*
+```ruby
+RfLogger::RequestHeaders.new(accepts: "application/json").to_hash
+    #=> {"Content-Type" => "application/json", "Accepts" => "application/json"}
+
+```
+
+#### Migration
 Assuming your logger will persist to a database, you'll need to create a table. While the api should make it pretty easy to determine which fields you'll need, here are the guts of what you'd need for both the SequelLogger and RailsLogger:
-######Sequel######
+######Sequel
 ```
 create_table :logs do
     primary_key :id
@@ -50,7 +83,7 @@ create_table :logs do
 end
 ```
 
-######Rails######
+###### ActiveRecord
 ```
 create_table :logs do |table|
     table.integer :level, null: false, default: 0
@@ -63,18 +96,18 @@ create_table :logs do |table|
 end
 ```
 
-#### Model ####
+#### Model
 Again, assuming you'll be using the SequelLogger or RailsLogger (or some other logger that persists to a datasource), you'll want to create a Model that wraps your logger. This is as simple as creating a class that inherits from your logger (though you can make it more complex as your project needs dictate):
 
-######Sequel######
+######Sequel
 ```
-class Log < RfLogger::SequelLogger
+class Log < RfLogger::Sequel::Logger
 end
 ```
 
-######Rails######
+######ActiveRecord
 ```
-class Log < RfLogger::RailsLogger
+class Log < RfLogger::ActiveRecord::Logger
 end
 ```
 

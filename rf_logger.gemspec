@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "thread-inheritable_attributes", "~> 0.1"
   s.add_development_dependency "bundler", "~> 1.3"
   s.add_development_dependency "rake"
-  s.add_development_dependency 'rspec', "~> 3"
+  s.add_development_dependency 'rspec', "~> 3.4"
   s.add_development_dependency 'simplecov'
   s.add_development_dependency 'sequel'
   s.add_development_dependency 'activerecord'

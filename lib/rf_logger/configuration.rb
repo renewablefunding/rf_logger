@@ -61,7 +61,7 @@ module RfLogger
 
     def framework_environment
       case
-        when defined?(Rails) then Rails.env
+        when defined?(::Rails) then ::Rails.env
         when defined?(Rory) then ENV['RORY_STAGE']
         when defined?(Padrino) then Padrino.environment
         when defined?(Sinatra::Application) then Sinatra::Application.environment
