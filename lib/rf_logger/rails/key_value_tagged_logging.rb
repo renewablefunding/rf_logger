@@ -2,38 +2,40 @@ require "rails/rack/logger"
 
 module Rails
   module Rack
-    class Logger < ActiveSupport::LogSubscriber
-      module TagsAsKeyValue
-        def initialize(app, taggers={})
-          super
-          @taggers      = taggers.values
-          @taggers_keys = taggers.keys
-        end
-
-        protected def compute_tags(*args)
-          super(*args).collect.with_index do |value, index|
-            "#{@taggers_keys[index]}=#{value}"
-          end
-        end
+    module TagsAsKeyValue
+      def initialize(app, taggers={})
+        super
+        @taggers      = taggers.values
+        @taggers_keys = taggers.keys
       end
 
-      prepend TagsAsKeyValue
+      protected def compute_tags(*args)
+        super(*args).collect.with_index do |value, index|
+          "#{@taggers_keys[index]}=#{value}"
+        end
+      end
     end
+
+    Logger.prepend(TagsAsKeyValue)
   end
 end
 
 require "active_support/tagged_logging"
 
 module ActiveSupport
-  module TaggedLogging
-    module Formatter
-      def tags_text
-        tags = current_tags
-        if tags.any?
-          tags.collect { |tag| "#{tag} " }.join
-        end
+  module RfTagsText
+    def tags_text
+      tags = current_tags
+      if tags.any?
+        tags.collect { |tag| "#{tag} " }.join
       end
     end
+  end
+
+  if defined? TaggedLogging::Formatter # Rails 4 or greater
+    TaggedLogging::Formatter.prepend(RfTagsText)
+  else
+    TaggedLogging.prepend(RfTagsText) # Rails 3.2
   end
 end
 
