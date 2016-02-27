@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.date        = '2014-02-20'
   s.summary     = "A logger that adheres to Renewable Funding logging conventions"
   s.description = "A logger that allows specification of severity, applicable entity/records, metadata, and optional notifications"
-  s.authors     = ["Dave Miller", "Laurie Kemmerer", "Maher Hawash", "Ravi Gadad"]
+  s.authors     = ["Dustin Zeisler", "Dave Miller", "Laurie Kemmerer", "Maher Hawash", "Ravi Gadad"]
   s.email       = 'devteam@renewfund.com'
   s.homepage    = ''
   s.license     = 'MIT'
