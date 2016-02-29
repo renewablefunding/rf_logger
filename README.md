@@ -23,9 +23,9 @@ Integrating RfLogger into your project requires the following steps:
 * Add a model
 
 #### Including rf_logger ####
-Currently, RfLogger is included from the Github repo. Place the following in your Gemfile:
+Place the following in your Gemfile:
 
-```gem 'rf_logger', :github => 'renewablefunding/rf_logger' , :tag => "0.3.0"```
+```gem 'rf_logger', "0.3"```
 
 Also make sure you include rf_logger and the logger you're going to be using:
 
@@ -42,7 +42,16 @@ Alters Rails.logger to append `request_id=89f25715-3e5d-4d85-9352-843a1aeec7d0`
 
 #### Rory Requirements
 
-Support Rory => `0.7`
+Support Rory => `0.8`
+
+
+#### Debug Framework detection and loading plug-ins
+
+Will puts to STDOUT frameworks detected and any errors.
+
+```ruby
+ENV["RF_LOGGER_LOAD_DEBUG"] = "true"
+```
 
 #### RfLogger::RequestHeaders
 

@@ -1,7 +1,7 @@
 module RfLogger
   class RailsCompatibility
-    MAX = "5.0.99"
-    MIN = "3.2"
+    MAX          = "5.0.99"
+    MIN          = "3.2"
     Incompatible = Class.new(StandardError)
 
     def initialize(rails_version: Gem::Version.new(::Rails::VERSION::STRING))
@@ -21,7 +21,8 @@ module RfLogger
     attr_reader :rails_version
 
     def rails_not_support_message
-      raise Incompatible, "These patches change Rails private methods and are only known to work for Rails #{MIN} through #{MAX}"
+      return unless ENV["RF_LOGGER_LOAD_DEBUG"] = "true"
+      puts "RfLogger: These patches change Rails private methods and are only known to work for Rails #{MIN} through #{MAX}. Current version #{rails_version}"
     end
 
     def rails_supported?

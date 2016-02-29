@@ -7,12 +7,12 @@ RSpec.describe RfLogger::RailsCompatibility do
 
   context "far left" do
     let(:rails_version) { 2.9 }
-    it { expect { subject.call }.to raise_error(described_class::Incompatible) }
+    it { expect { |b| subject.call(&b) }.to_not yield_control }
   end
 
   context "edge left" do
     let(:rails_version) { 3.1 }
-    it { expect { subject.call }.to raise_error(described_class::Incompatible) }
+    it { expect { |b| subject.call(&b) }.to_not yield_control }
   end
 
   context "middle edge left" do
@@ -32,11 +32,11 @@ RSpec.describe RfLogger::RailsCompatibility do
 
   context "edge right" do
     let(:rails_version) { 5.1 }
-    it { expect { subject.call }.to raise_error(described_class::Incompatible) }
+    it { expect { |b| subject.call(&b) }.to_not yield_control }
   end
 
   context "far right" do
     let(:rails_version) {6.0}
-    it { expect { subject.call }.to raise_error(described_class::Incompatible) }
+    it { expect { |b| subject.call(&b) }.to_not yield_control }
   end
 end
