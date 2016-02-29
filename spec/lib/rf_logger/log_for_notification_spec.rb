@@ -1,3 +1,5 @@
+require "rf_logger/log_for_notification"
+
 describe RfLogger::LogForNotification do
   subject { described_class.new(
     :actor => 'fruit_cocktail',
