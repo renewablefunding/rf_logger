@@ -1,4 +1,6 @@
 require "rf_logger/request/request_middleware"
+require "rory/version"
+
 unless Gem::Version.new(Rory::VERSION) >= Gem::Version.new("0.8")
   raise "RfLogger require Rory 0.8 or greater. Version #{Rory::VERSION} is not support."
 end
