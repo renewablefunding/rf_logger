@@ -16,13 +16,13 @@ The API provides helper methods for each severity (i.e. `Logger.debug`).  In add
 
 This gem includes RfLogger::SimpleLogger, RfLogger::Sequel::Logger and RfLogger::ActiveRecord::Logger loggers as options that adhere to this API.  The fields above should be passed into helper methods as a hash.
 
-##Integration##
+## Integration
 Integrating RfLogger into your project requires the following steps:
 * Include the rf_logger code in your project
 * Create a migration 
 * Add a model
 
-#### Including rf_logger ####
+#### Including rf_logger
 Place the following in your Gemfile:
 
 ```gem 'rf_logger', "0.3"```
@@ -78,7 +78,7 @@ RfLogger::RequestHeaders.new(accepts: "application/json").to_hash
 
 #### Migration
 Assuming your logger will persist to a database, you'll need to create a table. While the api should make it pretty easy to determine which fields you'll need, here are the guts of what you'd need for both the SequelLogger and RailsLogger:
-######Sequel
+###### Sequel
 ```
 create_table :logs do
     primary_key :id
@@ -108,20 +108,20 @@ end
 #### Model
 Again, assuming you'll be using the SequelLogger or RailsLogger (or some other logger that persists to a datasource), you'll want to create a Model that wraps your logger. This is as simple as creating a class that inherits from your logger (though you can make it more complex as your project needs dictate):
 
-######Sequel
+###### Sequel
 ```
 class Log < RfLogger::Sequel::Logger
 end
 ```
 
-######ActiveRecord
+###### ActiveRecord
 ```
 class Log < RfLogger::ActiveRecord::Logger
 end
 ```
 
 
-##Configuration##
+## Configuration
 Configuration mostly sets up additional notifications beyond the actual logging.
 
 ```ruby
@@ -140,7 +140,7 @@ end
 
 As you see above, you can specify different notifications for different levels or environments when you log an event.
 
-##Notification##
+## Notification
 While you have to implement notifiers yourself, the API is fairly simple.  The class must respond to .send_notification.  The argument passed in is an object that includes a #subject (which can be defined in the configuration (see above), and #details, which is the metadata in YAML format.  Future versions of this may allow for other transformations of the log data.
 
 Example:
