@@ -21,7 +21,7 @@ module RfLogger
     attr_reader :rails_version
 
     def rails_not_support_message
-      return unless ENV["RF_LOGGER_LOAD_DEBUG"] = "true"
+      return unless ENV["RF_LOGGER_LOAD_DEBUG"] == "true"
       puts "RfLogger: These patches change Rails private methods and are only known to work for Rails #{MIN} through #{MAX}. Current version #{rails_version}"
     end
 
