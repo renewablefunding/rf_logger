@@ -20,11 +20,10 @@ module RfLogger
             :level       => RfLogger::LEVELS.index(level.to_sym),
             :action      => entry[:action],
             :actor       => entry[:actor],
-            :metadata    => entry[:metadata] || {},
+            :metadata    => merge_request_to_metadata(entry[:metadata] || {}),
             :target_type => entry[:target_type],
             :target_id   => entry[:target_id],
           }
-          attributes[:metadata].merge!(request_tags: rf_logger_request_tags) unless rf_logger_request_tags.nil?
           create(attributes)
         end
       end

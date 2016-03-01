@@ -82,6 +82,20 @@ describe RfLogger::Sequel::Logger do
       end
     end
 
+    context "when rf_logger_request_tags has keys but nil values" do
+      it "return a metadata with no request_tags key" do
+        allow(described_class).to receive(:rf_logger_request_tags).and_return({ key_with_no_value: nil })
+
+        expect(described_class).to receive(:create).with(
+          ({ :level      => 1,
+             :actor      => "",
+             :metadata   => { },
+             :created_at => "NOW" })
+        )
+        described_class.add(:info, {})
+      end
+    end
+
     it 'sets actor to blank string if not provided' do
       expect(described_class).to receive(:create).with(
         :actor => '',
@@ -104,12 +118,30 @@ describe RfLogger::Sequel::Logger do
 
       described_class.add(:info, { :action => 'palpitate' })
     end
+
+    it 'return passed in value when metadata is not a hash' do
+      expect(described_class).to receive(:create).with(
+        :actor => '',
+        :action => 'palpitate',
+        :metadata => "not a hash",
+        :created_at => 'NOW',
+        :level => RfLogger::LEVELS.index(:info)
+      )
+
+      described_class.add(:info, { :action => 'palpitate', :metadata => "not a hash" })
+    end
   end
 
   describe "#metadata" do
     it 'returns a hash for metadata even though it is stored as JSON' do
-      subject.metadata = {'foo' => 'bar'}
-      expect(subject.metadata).to eq({'foo' => 'bar'})
+      subject.metadata = { 'foo' => 'bar' }
+      expect(subject.metadata).to eq({ 'foo' => 'bar', "request_tags" => { "request_id" => "909090" } })
+    end
+
+    it 'return a hash without request_tags when values are nil' do
+      allow(described_class).to receive(:rf_logger_request_tags).and_return({ key_with_no_value: nil })
+      subject.metadata = { 'foo' => 'bar' }
+      expect(subject.metadata).to eq({ 'foo' => 'bar' })
     end
 
     it 'returns nil if column is null' do

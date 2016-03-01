@@ -26,8 +26,7 @@ module RfLogger
         def add(level, entry)
           entry[:level]    = RfLogger::LEVELS.index(level.to_sym)
           entry[:actor]    = entry[:actor] || ''
-          entry[:metadata] = entry[:metadata] || {}
-          entry[:metadata].merge!(request_tags: rf_logger_request_tags) unless rf_logger_request_tags.nil?
+          entry[:metadata] = merge_request_to_metadata(entry[:metadata] || {})
           entry[:created_at] = Time.now
           create(entry)
         end
@@ -39,6 +38,7 @@ module RfLogger
       end
 
       def metadata=(metadata_hash)
+        metadata_hash = self.class.merge_request_to_metadata(metadata_hash)
         metadata_as_json = metadata_hash.nil? ? nil : metadata_hash.to_json
         self[:metadata]  = metadata_as_json
       end

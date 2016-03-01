@@ -44,6 +44,20 @@ describe RfLogger::ActiveRecord::Logger do
           )
         end
       end
+
+      context "when metadata is not a hash" do
+        it "creates new Log object with level = #{level}" do
+          described_class.send(level.to_sym, action: 'log me', metadata: "not a hash")
+          expect(described_class).to have_received(:create).with(
+            :level => RfLogger::LEVELS.index(level.to_sym),
+            :action => 'log me',
+            :actor => nil,
+            :metadata => "not a hash",
+            :target_type => nil,
+            :target_id => nil,
+          )
+        end
+      end
     end
   end
 end
