@@ -53,6 +53,6 @@ require "rails/engine/railties"
 
 class KeyValueKeyLogging < ::Rails::Railtie
   initializer "rf_logging.add_log_tag_request_id" do |app|
-    app.config.log_tags = { request_id: :uuid }
+    app.config.log_tags = { request_id: :uuid, remote_ip: :remote_ip }
   end
 end
