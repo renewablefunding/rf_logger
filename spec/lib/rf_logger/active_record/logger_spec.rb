@@ -1,8 +1,13 @@
-require "rf_logger/rails_logger"
+require "rf_logger/active_record/logger"
 require "active_record"
 
-describe RfLogger::RailsLogger do
+describe RfLogger::ActiveRecord::Logger do
   include_examples "RfLogger::RequestId", subject: described_class
+
+  it "keeps backwards compatibility" do
+    expect(described_class).to eq RfLogger::RailsLogger
+  end
+
   RfLogger::LEVELS.each do |level|
     before do
       allow(described_class).to receive(:create)
@@ -34,6 +39,20 @@ describe RfLogger::RailsLogger do
             :action => 'log me',
             :actor => nil,
             :metadata => {:request_tags => {test: "hello"}},
+            :target_type => nil,
+            :target_id => nil,
+          )
+        end
+      end
+
+      context "when metadata is not a hash" do
+        it "creates new Log object with level = #{level}" do
+          described_class.send(level.to_sym, action: 'log me', metadata: "not a hash")
+          expect(described_class).to have_received(:create).with(
+            :level => RfLogger::LEVELS.index(level.to_sym),
+            :action => 'log me',
+            :actor => nil,
+            :metadata => "not a hash",
             :target_type => nil,
             :target_id => nil,
           )

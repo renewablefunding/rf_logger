@@ -1,4 +1,8 @@
-describe RfLogger::Configuration do
+require "rf_logger/notifications/error_notification"
+require "rf_logger/configuration"
+require "rf_logger/levels"
+
+RSpec.describe RfLogger::Configuration do
   class SomeNotifier; end
   let(:configuration) {described_class.new}
   before :each do
@@ -10,6 +14,7 @@ describe RfLogger::Configuration do
     Object.send(:remove_const, :Rory) if defined?(Rory)
     Object.send(:remove_const, :Padrino) if defined?(Padrino)
     Object.send(:remove_const, :Sinatra) if defined?(Sinatra::Application)
+    configuration.clear!
   end
 
   describe "#environment" do

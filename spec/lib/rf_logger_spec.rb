@@ -1,3 +1,5 @@
+require "rf_logger/sequel/base"
+
 describe RfLogger do
   describe ".configure" do
     it 'yields the current configuration' do

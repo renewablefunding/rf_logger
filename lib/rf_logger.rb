@@ -1,47 +1,18 @@
-require 'forwardable'
-require 'yaml'
-require 'rf_logger/version'
-require 'rf_logger/configuration'
-require 'rf_logger/levels'
-
-require 'rf_logger/notifications/error_notification'
-require 'rf_logger/notifications/error_notification_environment_constraints'
-
-require 'rf_logger/simple_logger'
-require 'rf_logger/log_for_notification'
-
+require "rf_logger/version"
 
 module RfLogger
-  class UndefinedSetting < StandardError; end
-
-  class << self
-    extend Forwardable
-
-    Configuration.defined_settings.each do |setting|
-      def_delegators :configuration, setting, "#{setting.to_s}="
-    end
-
-    def configuration
-      @configuration ||= RfLogger::Configuration.new
-    end
-
-    def configure(&block)
-      unless block
-        raise ArgumentError.new("You tried to .configure without a block!")
-      end
-      yield configuration
-    end
-
-    def clear_configuration!
-      @configuration = nil
-    end
-
-    def configure!(&block)
-      unless block
-        raise ArgumentError.new('You tried to .configure without a block!')
-      end
-      clear_configuration!
-      yield configuration
+  def self.try_to_load(file)
+    begin
+      require file
+      puts "RfLogger: Detected #{file}." if ENV["RF_LOGGER_LOAD_DEBUG"]
+      yield
+    rescue LoadError => e
+      puts "RfLogger: #{file} not detected.\n\t#{e.to_s}" if ENV["RF_LOGGER_LOAD_DEBUG"]
     end
   end
 end
+
+RfLogger.try_to_load("rails")         { require "rf_logger/rails" }
+RfLogger.try_to_load("active_record") { require "rf_logger/active_record" }
+RfLogger.try_to_load("rory")          { require "rf_logger/rory" }
+RfLogger.try_to_load("sequel")        { puts "RfLogger: require 'rf_logger/sequel'; before inheriting from RfLogger::Sequel::Logger" if ENV["RF_LOGGER_LOAD_DEBUG"] }
