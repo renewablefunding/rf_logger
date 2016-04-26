@@ -133,7 +133,7 @@ RfLogger.configure do |c|
   c.set_notifier_list do |n|
     c.add_notifier Notification::DefinedElsewhere, :levels => [:error], :except => ['test', 'development']
     c.add_notifier Notification::OhNo, :levels => [:fatal, :error], :only => ['production']
-    c.add_notifer Notifcation:VeryVerbose
+    c.add_notifer Notification:VeryVerbose
   end
 end
 ```
