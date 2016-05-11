@@ -5,6 +5,8 @@ require "rf_logger/sequel/logger"
 describe RfLogger::Sequel::Logger do
   include_examples "RfLogger::RequestId", subject: described_class
 
+  before { allow(RfLogger::FileSystem::Logger).to receive(:create_log) }
+
   it "keeps backwards compatibility" do
     expect(described_class).to eq RfLogger::SequelLogger
   end

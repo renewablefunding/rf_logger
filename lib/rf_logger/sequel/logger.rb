@@ -1,6 +1,7 @@
 require "json"
 require "rf_logger/sequel/base"
 require "rf_logger/request/request_tags"
+require "rf_logger/file_system/logger"
 
 module RfLogger
   module Sequel
@@ -16,6 +17,7 @@ module RfLogger
         RfLogger::LEVELS.each do |level|
           define_method level.to_sym do |entry|
             log = add level, entry
+            RfLogger::FileSystem::Logger.create_log(level, entry)
 
             notification_log = LogForNotification.new(entry.merge(:level => level))
             ErrorNotification.dispatch_error(notification_log)
