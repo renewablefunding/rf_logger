@@ -16,13 +16,8 @@ module RfLogger
           log = {
             :timestamp   => Time.now.utc,
             :level       => level,
-            :request_tag => rf_logger_request_tags,
-            :action      => entry[:action],
-            :actor       => entry[:actor],
-            :metadata    => entry[:metadata],
-            :target_type => entry[:target_type],
-            :target_id   => entry[:target_id]
-          }
+            :request_tag => rf_logger_request_tags
+          }.merge(entry)
 
           FileUtils.touch(file_path) unless File.exists?(file_path)
           File.open(file_path, 'a') { |f| f.puts log.to_json }
